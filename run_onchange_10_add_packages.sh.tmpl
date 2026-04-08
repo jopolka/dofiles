@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Request sudo access upfront
+sudo -v
+
+echo "Adding package groups..."
+sudo dnf group install -y multimedia 2>/dev/null
+echo "Finished adding package groups."
+
+echo "Adding packages..."
+
+sudo dnf install -y --skip-unavailable \
+    `# ============================================` \
+    `# Shell and Terminal` \
+    `# ============================================` \
+    zsh \
+    alacritty \
+    \
+    `# ============================================` \
+    `# Version Control and Development Tools` \
+    `# ============================================` \
+    git \
+    lazygit \
+    golang \
+    \
+    `# ============================================` \
+    `# Text Editors` \
+    `# ============================================` \
+    vim \
+    nvim \
+    \
+    `# ============================================` \
+    `# CLI Utilities` \
+    `# ============================================` \
+    ripgrep \
+    bat \
+    ranger \
+    fzf \
+    jq \
+    yq \
+    tldr \
+    cowsay \
+    jd \
+    nmap \
+    gping \
+    pwgen \
+    \
+    `# ============================================` \
+    `# Container and Orchestration` \
+    `# ============================================` \
+    docker \
+    docker-compose \
+    lazydocker \
+    \
+    `# ============================================` \
+    `# Display and Window Management` \
+    `# ============================================` \
+    arandr \
+    autorandr \
+    rofi \
+    xsetroot \
+    xdotool \
+    xdpyinfo \
+    \
+    `# ============================================` \
+    `# Screenshots and Graphics` \
+    `# ============================================` \
+    flameshot \
+    ristretto \
+    \
+    `# ============================================` \
+    `# System and Boot` \
+    `# ============================================` \
+    greetd \
+    tuigreet \
+    plymouth-theme-spinfinity \
+    \
+    `# ============================================` \
+    `# Fonts` \
+    `# ============================================` \
+    fontawesome-fonts \
+    powerline-fonts \
+    \
+    `# ============================================` \
+    `# File Management and Monitoring` \
+    `# ============================================` \
+    inotifywait \
+    filezilla \
+    xclip \
+    \
+    `# ============================================` \
+    `# Security and Authentication` \
+    `# ============================================` \
+    seahorse \
+    howdy \
+    \
+    `# ============================================` \
+    `# Multimedia and Audio` \
+    `# ============================================` \
+    sox \
+    \
+    `# ============================================` \
+    `# Utilities` \
+    `# ============================================` \
+    simple-scan \
+    blueman \
+    unrar \
+    yamllint \
+    chromium \
+    pip
+
+echo "Finished adding packages."

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Request sudo access upfront
+sudo -v
+
+echo "Adding Copr repositories..."
+
+echo "  - Enabling atim/gping..."
+sudo dnf copr enable atim/gping -y 2>/dev/null
+
+echo "  - Enabling atim/lazydocker..."
+sudo dnf copr enable atim/lazydocker -y 2>/dev/null
+
+echo "  - Enabling atim/lazygit..."
+sudo dnf copr enable atim/lazygit -y 2>/dev/null
+
+echo "  - Enabling che/nerd-fonts..."
+sudo dnf copr enable che/nerd-fonts -y 2>/dev/null
+
+echo "  - Enabling ronnypfannschmidt/howdy-beta..."
+sudo dnf copr enable ronnypfannschmidt/howdy-beta -y 2>/dev/null
+
+echo "Finished adding Copr repositories."
