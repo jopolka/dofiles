@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Install Powerlevel10k theme if not already installed
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+P10K_DIR="$ZSH_CUSTOM/themes/powerlevel10k"
+
+if [ ! -d "$P10K_DIR" ]; then
+    echo "Installing Powerlevel10k theme..."
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+    echo "Powerlevel10k installed successfully."
+else
+    echo "Powerlevel10k is already installed."
+fi
+
+echo "Powerlevel10k setup complete."
