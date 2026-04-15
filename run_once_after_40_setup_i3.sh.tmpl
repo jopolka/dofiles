@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+echo "Setting up i3 dependencies..."
+
+# Create i3 config directory if it doesn't exist
+mkdir -p ~/.config/i3
+
+# Clone i3lock-fancy-multimonitor if not already present
+if [ ! -d ~/.config/i3/i3lock-fancy-multimonitor ]; then
+    echo "Installing i3lock-fancy-multimonitor..."
+    git clone https://github.com/guimeira/i3lock-fancy-multimonitor.git ~/.config/i3/i3lock-fancy-multimonitor
+    chmod +x ~/.config/i3/i3lock-fancy-multimonitor/lock
+else
+    echo "i3lock-fancy-multimonitor already installed"
+fi
+
+# Clone bumblebee-status if not already present
+if [ ! -d ~/.config/i3/bumblebee-status ]; then
+    echo "Installing bumblebee-status..."
+    git clone https://github.com/tobi-wan-kenobi/bumblebee-status.git ~/.config/i3/bumblebee-status
+else
+    echo "bumblebee-status already installed"
+fi
+
+# Create fonts directory if it doesn't exist
+mkdir -p ~/.local/share/fonts
+
+echo "i3 setup complete!"
