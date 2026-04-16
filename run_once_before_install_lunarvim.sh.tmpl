@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# LunarVim Installation Script for Fedora
+# This script installs LunarVim and its prerequisites
+# It runs before chezmoi applies the lvim configuration files
+
+set -e
+
+echo "=========================================="
+echo "Installing LunarVim Prerequisites"
+echo "=========================================="
+
+# Ensure Neovim is installed (should be from packages script)
+if ! command -v nvim &> /dev/null; then
+    echo "Error: Neovim is not installed. Please install it first."
+    exit 1
+fi
+
+# Check Neovim version (LunarVim requires Neovim >= 0.9.0)
+NVIM_VERSION=$(nvim --version | head -n1 | grep -oP 'v\K[0-9]+\.[0-9]+')
+REQUIRED_VERSION="0.9"
+if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$NVIM_VERSION" | sort -V | head -n1)" != "$REQUIRED_VERSION" ]; then
+    echo "Warning: LunarVim requires Neovim >= 0.9.0, found version $NVIM_VERSION"
+fi
+
+# Install npm dependencies
+echo "Installing npm dependencies..."
+if command -v npm &> /dev/null; then
+    npm install -g neovim tree-sitter-cli
+else
+    echo "Warning: npm not found. Skipping npm dependencies."
+fi
+
+# Install Python neovim package
+echo "Installing Python neovim package..."
+if command -v pip3 &> /dev/null; then
+    pip3 install --user pynvim
+elif command -v pip &> /dev/null; then
+    pip install --user pynvim
+else
+    echo "Warning: pip not found. Skipping Python neovim package."
+fi
+
+# Verify rust tools are installed (fd and ripgrep)
+echo "Verifying rust tools..."
+if ! command -v fd &> /dev/null && ! command -v fdfind &> /dev/null; then
+    echo "Warning: fd-find not found. Installing via cargo..."
+    if command -v cargo &> /dev/null; then
+        cargo install fd-find
+    fi
+fi
+
+if ! command -v rg &> /dev/null; then
+    echo "Warning: ripgrep not found. Installing via cargo..."
+    if command -v cargo &> /dev/null; then
+        cargo install ripgrep
+    fi
+fi
+
+echo "=========================================="
+echo "Installing LunarVim"
+echo "=========================================="
+
+# Check if LunarVim is already installed
+if [ -d "$HOME/.local/share/lunarvim" ] || [ -d "$HOME/.config/lvim" ]; then
+    echo "LunarVim appears to be already installed."
+    read -p "Do you want to reinstall/update LunarVim? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping LunarVim installation."
+        exit 0
+    fi
+fi
+
+# Install LunarVim
+echo "Downloading and running LunarVim installer..."
+LV_BRANCH='release-1.4/neovim-0.9' bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/release-1.4/neovim-0.9/utils/installer/install.sh) --no-install-dependencies
+
+# Verify installation
+if command -v lvim &> /dev/null; then
+    echo "=========================================="
+    echo "LunarVim installed successfully!"
+    echo "=========================================="
+    echo "LunarVim executable: $(which lvim)"
+    echo ""
+    echo "Note: Your custom LunarVim configuration will be applied by chezmoi."
+else
+    echo "=========================================="
+    echo "Warning: LunarVim installation completed but 'lvim' command not found in PATH."
+    echo "You may need to add ~/.local/bin to your PATH."
+    echo "=========================================="
+fi
+
+# Add lvim to PATH if not already there
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    echo ""
+    echo "Note: Add the following to your shell configuration if not already present:"
+    echo "export PATH=\"\$HOME/.local/bin:\$PATH\""
+fi
+
+echo ""
+echo "LunarVim installation complete!"
