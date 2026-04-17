@@ -23,6 +23,20 @@ if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$NVIM_VERSION" | sort -V | head -n1)"
     echo "Warning: LunarVim requires Neovim >= 0.9.0, found version $NVIM_VERSION"
 fi
 
+# Configure npm to install global packages without sudo
+echo "Configuring npm global packages directory..."
+if command -v npm &> /dev/null; then
+    # Create directory for global packages
+    mkdir -p "${HOME}/.npm-packages"
+    
+    # Configure npm to use this directory
+    npm config set prefix "${HOME}/.npm-packages"
+    
+    echo "npm configured to install global packages in ${HOME}/.npm-packages"
+else
+    echo "Warning: npm not found. Skipping npm configuration."
+fi
+
 # Install npm dependencies
 echo "Installing npm dependencies..."
 if command -v npm &> /dev/null; then
