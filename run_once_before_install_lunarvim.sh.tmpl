@@ -24,15 +24,20 @@ if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$NVIM_VERSION" | sort -V | head -n1)"
 fi
 
 # Configure npm to install global packages without sudo
+# Note: Skip this if using nvm, as nvm manages its own npm installations
 echo "Configuring npm global packages directory..."
 if command -v npm &> /dev/null; then
-    # Create directory for global packages
-    mkdir -p "${HOME}/.npm-packages"
-    
-    # Configure npm to use this directory
-    npm config set prefix "${HOME}/.npm-packages"
-    
-    echo "npm configured to install global packages in ${HOME}/.npm-packages"
+    if [ -z "$NVM_DIR" ] || [ ! -s "$NVM_DIR/nvm.sh" ]; then
+        # Create directory for global packages
+        mkdir -p "${HOME}/.npm-packages"
+        
+        # Configure npm to use this directory
+        npm config set prefix "${HOME}/.npm-packages"
+        
+        echo "npm configured to install global packages in ${HOME}/.npm-packages"
+    else
+        echo "nvm detected - skipping npm prefix configuration (nvm manages its own npm)"
+    fi
 else
     echo "Warning: npm not found. Skipping npm configuration."
 fi
